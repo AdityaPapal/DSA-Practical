@@ -1,68 +1,105 @@
-//Code:
+/*
+A book consists of chapters, chapters consist of sections and sections consist of subsections. 
+Construct a tree and print the nodes. Find the time and space requirements of your method.
+*/
+
 #include <iostream>
-#include <vector>
 using namespace std;
 
-class Subsection 
+struct node
 {
-public:
-    string name;
-    Subsection(string n) { name=n; }
-};
+    char title[20];
+    int node_count;
+    struct node *child[10];
+} * base;
 
-class Section
+class book
 {
 public:
-    string name;
-    vector<Subsection> subsections;
-    Section(string n) { name=n; }
-    void addSubsection(Subsection s) { subsections.push_back(s); }
-};
+    book()
+    {
+        base = NULL;
+    }
 
-class Chapter
-{
-public:
-    string name;
-    vector<Section> sections;
-    Chapter(string n) { name = n; }
-    void addSection(Section s) { sections.push_back(s); }
+    void creat()
+    {
+        int chapter, section, subsection, i, j, k;
+        base = new node();
+
+        cout << "The name of book is => ";
+        // cin >> base->title;
+        cin.getline(base->title,20);
+
+        cout << "Enter the number of chapter => ";
+        cin >> chapter;
+        base->node_count = chapter;
+
+        for (i = 0; i < chapter; i++)
+        {
+            base->child[i] = new node;
+
+            cout << "Enter the name of chapter " << i + 1 << " => ";
+            cin >> base->child[i]->title;
+
+            cout << "Enter the number of section => ";
+            cin >> section;
+            base->child[i]->node_count = section;
+
+            for (j = 0; j < section; j++)
+            {
+                base->child[i]->child[j] = new node;
+
+                cout << "Enter the name of section " << j + 1 << "=> ";
+                cin >> base->child[i]->child[j]->title;
+
+                cout << "Enter the number of sub-section => ";
+                cin >> subsection;
+                base->child[i]->child[j]->node_count = subsection;
+
+                for (k = 0; k < subsection; k++)
+                {
+                    base->child[i]->child[j]->child[k] = new node;
+
+                    cout << "Enter the name of sub-section " << k + 1 << "=> ";
+                    cin >> base->child[i]->child[j]->child[k]->title;
+                }
+            }
+        }
+    }
+
+    void print(node *r)
+    {
+        int i, j, k, chapter;
+        if (r != NULL)
+        {
+            cout << "\nThe book name is " << r->title << endl;
+
+            chapter = r->node_count;
+
+            for (i = 0; i < chapter; i++)
+            {
+                cout << "\nChapter " << i + 1 << endl;
+                cout << "  " << r->child[i]->title;
+                cout << "\n\tSection";
+                for (j = 0; j < r->child[i]->node_count; j++)
+                {
+                    cout << "\n\t  " << r->child[i]->child[j]->title;
+                    cout << "\n\t\tsubsection";
+                    for (k = 0; k < r->child[i]->child[j]->node_count; k++)
+                    {
+                        cout << "\n\t\t   " << r->child[i]->child[j]->child[k]->title;
+                    }
+                }
+            }
+        }
+    }
 };
 
 int main()
 {
-    Chapter chapter1("Chapter 1");
-    Section section1("Section 1");
-    section1.addSubsection(Subsection("Subsection 1"));
-    section1.addSubsection(Subsection("Subsection 2"));
-    Section section2("Section 2");
-    section2.addSubsection(Subsection("Subsection 1"));
-    section2.addSubsection(Subsection("Subsection 2"));
-    chapter1.addSection(section1);
-    chapter1.addSection(section2);
+    book obj;
+    obj.creat();
 
-    cout<<"Book structure:"<<endl;
-    cout<<chapter1.name<<endl;
-    for(auto section:chapter1.sections)
-    {
-        cout<<"\t"<<section.name<<endl;
-        for(auto subsection:section.subsections)
-        {
-            cout<<"\t\t"<<subsection.name<<endl;
-        }
-    }
-
-    return 0;
+    cout << "---------------------" << endl;
+    obj.print(base);
 }
-/*
-Output:
-
-Book structure:
-Chapter 1
-        Section 1
-                Subsection 1
-                Subsection 2
-        Section 2
-                Subsection 1
-                Subsection 2
-
-*/
